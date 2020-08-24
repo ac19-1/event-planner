@@ -14,6 +14,8 @@
   * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    font-family: 'Raleway', sans-serif;
   }
 
   ::-webkit-scrollbar{
@@ -28,5 +30,57 @@
   }
   ::-webkit-scrollbar-thumb:hover{
     background: #646464;
+  }
+
+  .left-0{
+    left: 0;
+  }
+
+  .left-25{
+    left: 25%;
+  }
+
+  .left-50{
+    left: 50%;
+  }
+
+  .left-75{
+    left: 75%;
+  }
+
+  .left-100{
+    left: 100%;
+  }
+
+  .top-0{
+    top: 0;
+  }
+
+  .top-25{
+    top: 25%;
+  }
+
+  .top-50{
+    top: 50%;
+  }
+
+  .top-75{
+    top: 75%;
+  }
+
+  .top-100{
+    top: 100%;
+  }
+
+  .h-100vh {
+    height: 100vh;
+  }
+
+  .color-salmon {
+    color: salmon;
+  }
+  
+  .color-dark-gray {
+    color: #525252;
   }
 </style>
