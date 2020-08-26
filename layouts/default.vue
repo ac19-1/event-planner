@@ -155,4 +155,9 @@
   .list-style-none {
     list-style: none;
   }
+
+  .numbers {
+    font-family: 'Roboto', sans-serif !important;
+    font-weight: 400;
+  }
 </style>
