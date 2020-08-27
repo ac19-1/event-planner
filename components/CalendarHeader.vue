@@ -1,8 +1,8 @@
 <template>
 	<div class="calendar-header">
 		<div>
-			<v-select dense :items="months" v-model="selectedMonth" :item-value="selectedMonth"></v-select>
-			<v-select dense :items="years" v-model="selectedYear" :item-value="selectedYear"></v-select>
+			<v-select dense :items="months" :value="$props.month" @change="monthChange"></v-select>
+			<v-select dense :items="years" :value="$props.year" @change="yearChange"></v-select>
 		</div>
 	</div>
 </template>
@@ -434,14 +434,13 @@ export default {
 		};
   },
   methods: {
-    onLoad() {
-      this.selectedMonth = this.$props.month
-      this.selectedYear = this.$props.year
+    monthChange(e) {
+      this.$emit("monthChanged", e)
+    },
+    yearChange(e) {
+      this.$emit("yearChanged", e)
     }
   },
-  mounted() {
-    this.onLoad()
-  }
 };
 </script>
 

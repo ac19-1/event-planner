@@ -30,8 +30,13 @@
 				</div>
 			</div>
 			<div class="days w-70 h-100 bg-light calendar-container">
-				<calendar-header :year="selected.year" :month="selected.month" />
-				<calendar-body class="text-center" year="2020" month="8" />
+				<calendar-header
+					:year="selected.year"
+					:month="selected.month"
+					@monthChanged="monthSelected"
+					@yearChanged="yearSelected"
+				/>
+				<calendar-body class="text-center" :year="selected.year" :month="(selected.monthIndex + 1)" @dateChanged="dateChange"/>
 			</div>
 		</div>
 	</v-app>
@@ -63,21 +68,58 @@ export default {
 				date: "",
 				day: "",
 				month: "",
+				monthIndex: "",
 				year: "",
 			},
 			colors: [
-				"rgba(243, 255, 15, 0.4)",
-				"rgba(255, 0, 0, 0.4)",
-				"rgba(148, 148, 148, 0.4)",
-				"rgba(84, 255, 118, 0.4)",
-				"rgba(255, 255, 84, 0.4)",
-				"rgba(255, 157, 79, 0.4)",
-				"rgba(79, 188, 255, 0.4)",
-				"rgba(170, 255, 0, 0.4)",
-				"rgba(189, 151, 0, 0.4)",
-				"rgba(96, 20, 139, 0.4)",
-				"rgba(232, 31, 255, 0.4)",
-				"rgba(41, 218, 35, 0.4)",
+				{
+					month: "January",
+					color: "rgba(243, 255, 15, 0.4)",
+				},
+				{
+					month: "February",
+					color: "rgba(255, 0, 0, 0.4)",
+				},
+				{
+					month: "March",
+					color: "rgba(148, 148, 148, 0.4)",
+				},
+				{
+					month: "April",
+					color: "rgba(84, 255, 118, 0.4)",
+				},
+				{
+					month: "May",
+					color: "rgba(255, 255, 84, 0.4)",
+				},
+				{
+					month: "June",
+					color: "rgba(255, 157, 79, 0.4)",
+				},
+				{
+					month: "July",
+					color: "rgba(79, 188, 255, 0.4)",
+				},
+				{
+					month: "August",
+					color: "rgba(170, 255, 0, 0.4)",
+				},
+				{
+					month: "September",
+					color: "rgba(189, 151, 0, 0.4)",
+				},
+				{
+					month: "October",
+					color: "rgba(96, 20, 139, 0.4)",
+				},
+				{
+					month: "November",
+					color: "rgba(232, 31, 255, 0.4)",
+				},
+				{
+					month: "December",
+					color: "rgba(41, 218, 35, 0.4)",
+				},
 			],
 		};
 	},
@@ -106,13 +148,14 @@ export default {
 					? "0" + selected.getDate()
 					: selected.getDate();
 			this.selected.month = this.getMonthName(selected.getMonth());
+			this.selected.monthIndex = selected.getMonth()
 			this.selected.year = selected.getFullYear();
 			this.selected.day = this.getDayName(selected.getDay());
 			this.setOverlay(selected.getMonth());
 		},
 		setOverlay(month) {
 			let custom = document.querySelector("#custom-overlay");
-			custom.style.background = this.colors[month];
+			custom.style.background = this.colors[month].color;
 		},
 		getMonthName(month) {
 			let months = [
@@ -148,6 +191,36 @@ export default {
 				this.setTime();
 			});
 			this.setSelected(new Date());
+		},
+		monthSelected(e) {
+			this.selected.month = e;
+			this.selected.monthIndex = this.findMonthIndex(e)
+			let index = this.colors.findIndex(x => {return x.month.toLowerCase() == e.toLowerCase()})
+			this.setOverlay(index)
+		},
+		yearSelected(e) {
+			this.selected.year = e;
+		},
+		findMonthIndex(month) {
+			let months = [
+				"January",
+				"February",
+				"March",
+				"April",
+				"May",
+				"June",
+				"July",
+				"August",
+				"September",
+				"October",
+				"November",
+				"December",
+			];
+			let index = months.findIndex(x => {return x.toLowerCase() == month.toLowerCase()})
+			return index
+		},
+		dateChange(e) {
+			this.selected.date = e
 		},
 	},
 	mounted() {
@@ -195,14 +268,14 @@ export default {
 
 .month {
 	color: white;
-	top: 55%;
-	transform: translate(-50%, -55%);
+	top: 60%;
+	transform: translate(-50%, -60%);
 }
 
 .shadow-month {
 	color: #797979;
-	top: 56.5%;
-	transform: translate(-50%, -56.5%);
+	top: 61.5%;
+	transform: translate(-50%, -61.5%);
 }
 
 .unselectable {

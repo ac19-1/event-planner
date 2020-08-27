@@ -5,7 +5,7 @@
 				<label for v-for="field in fields" :key="field.key">{{field.label}}</label>
 			</div>
 			<div v-for="(date,index) in dates" :key="index">
-				<calendar-date v-for="(d,index) in date" :key="index" :date="d.date" />
+				<calendar-date v-for="(d,index) in date" :key="index" :date="d.date" @dateChanged="dateChange"/>
 			</div>
 		</div>
 	</div>
@@ -17,6 +17,14 @@ export default {
 	props: ["year", "month"],
 	components: {
 		CalendarDate,
+	},
+	watch: {
+		year: function (newVal, oldVal) {
+			this.setCalendarBody()
+		},
+		month: function (newVal, oldVal) {
+			this.setCalendarBody()
+		},
 	},
 	data() {
 		return {
@@ -33,33 +41,42 @@ export default {
 		};
 	},
 	mounted() {
-		let currWeek = 0;
-		let d = new Date(this.$props.year, this.$props.month - 1);
-		let day = this.getDay(d);
-		this.dates.push([]);
-		for (let i = 0; i < day; i++) {
-			this.dates[currWeek].push({ date: 0 });
-		}
-		while (d.getMonth() == this.$props.month - 1) {
-			this.dates[currWeek].push({ date: d.getDate() });
-
-			if (this.getDay(d) % 7 === 6) {
-				this.dates.push([]);
-				currWeek++;
-			}
-			d.setDate(d.getDate() + 1);
-		}
-		if (this.getDay(d) !== 0) {
-			for (let i = this.getDay(d); i < 7; i++) {
-				this.dates[currWeek].push({ date: 0 });
-			}
-		}
+		this.setCalendarBody()
 	},
 	methods: {
 		getDay(date) {
 			let day = date.getDay();
 			if (day == 0) day = 7;
-			return day - 1;
+			return day;
+		},
+		setCalendarBody() {
+			this.dates = []
+			let currWeek = 0;
+			let d = new Date(this.$props.year, this.$props.month - 1);
+			let day = this.getDay(d);
+			this.dates.push([]);
+			if(day != 7) {
+				for (let i = 0; i < day; i++) {
+					this.dates[currWeek].push({ date: '' });
+				}
+			}
+			while (d.getMonth() == this.$props.month - 1) {
+				this.dates[currWeek].push({ date: d.getDate() });
+
+				if (this.getDay(d) % 7 === 6) {
+					this.dates.push([]);
+					currWeek++;
+				}
+				d.setDate(d.getDate() + 1);
+			}
+			if (this.getDay(d) !== 0) {
+				for (let i = this.getDay(d); i < 7; i++) {
+					this.dates[currWeek].push({ date: '' });
+				}
+			}
+		},
+		dateChange(e) {
+			this.$emit("dateChanged", e);
 		},
 	},
 };

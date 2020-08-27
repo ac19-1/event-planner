@@ -1,10 +1,16 @@
 <template>
-	<v-btn fab text class="calendar-date">{{date}}</v-btn>
+	<v-btn v-if="date!==''" fab text class="calendar-date" @click="dateChange(date)">{{date}}</v-btn>
+	<v-btn v-else fab text class="calendar-date" disabled>{{date}}</v-btn>
 </template>
 
 <script>
 export default {
 	props: ["date"],
+	methods: {
+		dateChange(e) {
+			this.$emit("dateChanged", e);
+		},
+	},
 };
 </script>
 
