@@ -36,7 +36,7 @@
 					@monthChanged="monthSelected"
 					@yearChanged="yearSelected"
 				/>
-				<calendar-body class="text-center" :year="selected.year" :month="(selected.monthIndex + 1)" @dateChanged="dateChange"/>
+				<calendar-body class="text-center" :selected="selected.date" :year="selected.year" :month="(selected.monthIndex + 1)" @dateChanged="dateChange"/>
 			</div>
 		</div>
 	</v-app>

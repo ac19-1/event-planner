@@ -4,8 +4,8 @@
 			<div>
 				<label for v-for="field in fields" :key="field.key">{{field.label}}</label>
 			</div>
-			<div v-for="(date,index) in dates" :key="index">
-				<calendar-date v-for="(d,index) in date" :key="index" :date="d.date" @dateChanged="dateChange"/>
+			<div v-for="(date,i) in dates" :key="i">
+				<calendar-date v-for="(d,idx) in date" :selected="selections[i][idx]" :key="idx" :date="d.date" @dateChanged="dateChange"/>
 			</div>
 		</div>
 	</div>
@@ -14,7 +14,7 @@
 <script>
 import CalendarDate from "~/components/CalendarDate";
 export default {
-	props: ["year", "month"],
+	props: ["selected","year", "month"],
 	components: {
 		CalendarDate,
 	},
@@ -25,6 +25,9 @@ export default {
 		month: function (newVal, oldVal) {
 			this.setCalendarBody()
 		},
+		selected: function(newVal, oldVal) {
+			this.setCalendarBody()
+		}
 	},
 	data() {
 		return {
@@ -38,6 +41,7 @@ export default {
 				{ label: "Sat", key: "sat" },
 			],
 			dates: [],
+			selections: []
 		};
 	},
 	mounted() {
@@ -50,21 +54,33 @@ export default {
 			return day;
 		},
 		setCalendarBody() {
+			console.log('ehheh')
 			this.dates = []
+			this.selections = []
 			let currWeek = 0;
 			let d = new Date(this.$props.year, this.$props.month - 1);
 			let day = this.getDay(d);
 			this.dates.push([]);
+			this.selections.push([]);
 			if(day != 7) {
 				for (let i = 0; i < day; i++) {
 					this.dates[currWeek].push({ date: '' });
+					this.selections[currWeek].push(false);
 				}
 			}
 			while (d.getMonth() == this.$props.month - 1) {
 				this.dates[currWeek].push({ date: d.getDate() });
+				
+				if (d.getDate() == this.$props.selected ){
+					this.selections[currWeek].push(true);
+				}
+				else {
+					this.selections[currWeek].push(false);
+				}
 
 				if (this.getDay(d) % 7 === 6) {
 					this.dates.push([]);
+					this.selections.push([])
 					currWeek++;
 				}
 				d.setDate(d.getDate() + 1);
@@ -72,6 +88,7 @@ export default {
 			if (this.getDay(d) !== 0) {
 				for (let i = this.getDay(d); i < 7; i++) {
 					this.dates[currWeek].push({ date: '' });
+					this.selections[currWeek].push(false);
 				}
 			}
 		},
